@@ -91,7 +91,7 @@ flutter test                                        # widget 测试
 | POST | /api/auth/register | 注册 | 公开 |
 | POST | /api/auth/login | 登录(返回 JWT) | 公开 |
 | GET | /api/users | 用户列表 | 登录 |
-| GET | /api/users/{id} | 用户详情 | 公开 |
+| GET | /api/users/{id} | 用户详情 | 登录 |
 | PUT | /api/users/{id} | 更新用户名/密码 | 本人 |
 | DELETE | /api/users/{id} | 注销(软删+清帖) | 本人 |
 | GET | /api/posts?page=&size= | 帖子列表(分页) | 公开 |

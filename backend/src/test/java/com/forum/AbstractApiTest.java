@@ -91,7 +91,7 @@ public abstract class AbstractApiTest {
         JsonNode resp = postJson("/api/auth/register",
                 Map.of("username", username, "password", PASSWORD), null);
         assertCode(resp, 0);
-        return data(resp);
+        return resp;
     }
 
     protected JsonNode login(String username, String password) throws Exception {
@@ -104,7 +104,8 @@ public abstract class AbstractApiTest {
         return data(resp).get("token").asText();
     }
 
+    /** 生成 3~20 字符范围内唯一用户名(受注册校验限制) */
     protected String uniqueName(String prefix) {
-        return prefix + "_" + Long.toHexString(System.nanoTime());
+        return prefix + "_" + Long.toHexString(System.nanoTime() & 0xFFFFFF);
     }
 }

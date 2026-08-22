@@ -82,11 +82,11 @@ class UserApiIntegrationTest extends AbstractApiTest {
     }
 
     @Test
-    @DisplayName("T05 查询用户信息 -> 200")
+    @DisplayName("T05 查询用户信息 -> 200(需登录)")
     void getUser() throws Exception {
         UserSession session = createUser("u_get");
 
-        JsonNode resp = getJson("/api/users/" + session.id(), null);
+        JsonNode resp = getJson("/api/users/" + session.id(), session.token());
         assertCode(resp, 0);
         assertThat(data(resp).get("id").asLong()).isEqualTo(session.id());
     }
@@ -94,7 +94,9 @@ class UserApiIntegrationTest extends AbstractApiTest {
     @Test
     @DisplayName("T06 查询不存在的用户 -> 40401")
     void getUserNotFound() throws Exception {
-        JsonNode resp = getJson("/api/users/99999999", null);
+        UserSession session = createUser("u_notfound");
+
+        JsonNode resp = getJson("/api/users/99999999", session.token());
         assertCode(resp, 40401);
     }
 
@@ -130,11 +132,10 @@ class UserApiIntegrationTest extends AbstractApiTest {
     @Test
     @DisplayName("T14 注销用户 -> 查询 40401,原密码无法登录")
     void deleteUser() throws Exception {
-        String name = uniqueName("u_delete");
-        UserSession session = createUser(name);
+        UserSession session = createUser("u_delete");
 
         assertCode(deleteJson("/api/users/" + session.id(), session.token()), 0);
-        assertCode(getJson("/api/users/" + session.id(), null), 40401);
-        assertCode(login(name, PASSWORD), 40101);
+        assertCode(getJson("/api/users/" + session.id(), session.token()), 40401);
+        assertCode(login(session.name(), PASSWORD), 40101);
     }
 }

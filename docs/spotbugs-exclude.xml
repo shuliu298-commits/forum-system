@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SpotBugs 排除过滤器
+  - EI_EXPOSE_REP / EI_EXPOSE_REP2:Spring 构造器注入(DI)与不可变 DTO 的经典误报,
+    被注入/存储的对象本应为可变 Bean,DTO 亦不可变。
+  - CT_CONSTRUCTOR_THROW:配置校验(如 JWT secret 长度)在构造器抛错属防御式编程。
+-->
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+    </Match>
+</FindBugsFilter>

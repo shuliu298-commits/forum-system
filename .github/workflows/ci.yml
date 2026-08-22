@@ -38,24 +38,6 @@ jobs:
   test:
     name: Stage2 Backend Test
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.4
-        env:
-          MYSQL_ROOT_PASSWORD: forum123
-          MYSQL_DATABASE: forum_user
-        ports:
-          - 3307:3306
-        options: >-
-          --health-cmd "mysqladmin ping -h localhost -pforum123"
-          --health-interval 10s --health-timeout 5s --health-retries 20
-      mongo:
-        image: mongo:7
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongosh --quiet --eval db.runCommand({ping:1}).ok"
-          --health-interval 10s --health-timeout 5s --health-retries 20
     steps:
       - uses: actions/checkout@v4
 
@@ -65,8 +47,17 @@ jobs:
           java-version: '21'
           cache: maven
 
+      # 用 dev compose 起 MySQL + MongoDB(含初始化脚本),比 GitHub services
+      # 容器对 mongo:7 更稳定;与集成测试端口(3307/27017)一致
+      - name: 启动数据库容器
+        run: docker compose -f deploy/docker-compose.yml -p forum-ci up -d --wait
+
       - name: mvn verify(集成测试)
         run: cd backend && mvn -B verify
+
+      - name: 清理数据库容器
+        if: always()
+        run: docker compose -f deploy/docker-compose.yml -p forum-ci down -v --remove-orphans
 
   docker-e2e:
     name: Stage3 Docker E2E

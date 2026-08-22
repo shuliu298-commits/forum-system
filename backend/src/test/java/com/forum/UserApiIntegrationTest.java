@@ -53,7 +53,7 @@ class UserApiIntegrationTest extends AbstractApiTest {
         String name = uniqueName("u_dup");
         register(name);
 
-        JsonNode resp = post("/api/auth/register",
+        JsonNode resp = postJson("/api/auth/register",
                 Map.of("username", name, "password", PASSWORD), null);
         assertCode(resp, 40901);
     }
@@ -86,7 +86,7 @@ class UserApiIntegrationTest extends AbstractApiTest {
     void getUser() throws Exception {
         UserSession session = createUser("u_get");
 
-        JsonNode resp = get("/api/users/" + session.id(), null);
+        JsonNode resp = getJson("/api/users/" + session.id(), null);
         assertCode(resp, 0);
         assertThat(data(resp).get("id").asLong()).isEqualTo(session.id());
     }
@@ -94,7 +94,7 @@ class UserApiIntegrationTest extends AbstractApiTest {
     @Test
     @DisplayName("T06 查询不存在的用户 -> 40401")
     void getUserNotFound() throws Exception {
-        JsonNode resp = get("/api/users/99999999", null);
+        JsonNode resp = getJson("/api/users/99999999", null);
         assertCode(resp, 40401);
     }
 
@@ -104,7 +104,7 @@ class UserApiIntegrationTest extends AbstractApiTest {
         UserSession session = createUser("u_update");
 
         String newName = uniqueName("u_update_x");
-        JsonNode resp = put("/api/users/" + session.id(),
+        JsonNode resp = putJson("/api/users/" + session.id(),
                 Map.of("username", newName), session.token());
         assertCode(resp, 0);
         assertThat(data(resp).get("username").asText()).isEqualTo(newName);
@@ -117,11 +117,11 @@ class UserApiIntegrationTest extends AbstractApiTest {
     void updatePassword() throws Exception {
         UserSession session = createUser("u_pw");
 
-        JsonNode wrong = put("/api/users/" + session.id(),
+        JsonNode wrong = putJson("/api/users/" + session.id(),
                 Map.of("password", "newpass123", "oldPassword", "wrong"), session.token());
         assertCode(wrong, 40300);
 
-        JsonNode ok = put("/api/users/" + session.id(),
+        JsonNode ok = putJson("/api/users/" + session.id(),
                 Map.of("password", "newpass123", "oldPassword", PASSWORD), session.token());
         assertCode(ok, 0);
         assertCode(login(session.name(), "newpass123"), 0);
@@ -133,8 +133,8 @@ class UserApiIntegrationTest extends AbstractApiTest {
         String name = uniqueName("u_delete");
         UserSession session = createUser(name);
 
-        assertCode(delete("/api/users/" + session.id(), session.token()), 0);
-        assertCode(get("/api/users/" + session.id(), null), 40401);
+        assertCode(deleteJson("/api/users/" + session.id(), session.token()), 0);
+        assertCode(getJson("/api/users/" + session.id(), null), 40401);
         assertCode(login(name, PASSWORD), 40101);
     }
 }

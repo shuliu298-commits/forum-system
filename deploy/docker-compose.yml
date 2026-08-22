@@ -29,7 +29,6 @@ services:
       - "27017:27017"
     volumes:
       - forum-mongo-data:/data/db
-      - ./init/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
       - ./init/load.js:/docker-entrypoint-initdb.d/load.js:ro
       - ./init/mock-data.json:/docker-entrypoint-initdb.d/mock-data.json:ro
     healthcheck:

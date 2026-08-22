@@ -6,7 +6,6 @@ import com.forum.post.dto.CommentResponse;
 import com.forum.post.dto.CreateCommentRequest;
 import com.forum.post.dto.CreatePostRequest;
 import com.forum.post.dto.PostDetailResponse;
-import com.forum.post.dto.PostSummaryResponse;
 import com.forum.post.entity.Comment;
 import com.forum.post.entity.Post;
 import com.forum.post.repository.PostRepository;

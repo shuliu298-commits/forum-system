@@ -58,19 +58,19 @@ public abstract class AbstractApiTest {
         return om.readTree(content);
     }
 
-    protected JsonNode get(String url, String token) throws Exception {
+    protected JsonNode getJson(String url, String token) throws Exception {
         return request(get(url), null, token);
     }
 
-    protected JsonNode post(String url, Object body, String token) throws Exception {
+    protected JsonNode postJson(String url, Object body, String token) throws Exception {
         return request(post(url), body, token);
     }
 
-    protected JsonNode put(String url, Object body, String token) throws Exception {
+    protected JsonNode putJson(String url, Object body, String token) throws Exception {
         return request(put(url), body, token);
     }
 
-    protected JsonNode delete(String url, String token) throws Exception {
+    protected JsonNode deleteJson(String url, String token) throws Exception {
         return request(delete(url), null, token);
     }
 
@@ -88,14 +88,14 @@ public abstract class AbstractApiTest {
     // ---------- 业务辅助 ----------
 
     protected JsonNode register(String username) throws Exception {
-        JsonNode resp = post("/api/auth/register",
+        JsonNode resp = postJson("/api/auth/register",
                 Map.of("username", username, "password", PASSWORD), null);
         assertCode(resp, 0);
         return data(resp);
     }
 
     protected JsonNode login(String username, String password) throws Exception {
-        return post("/api/auth/login", Map.of("username", username, "password", password), null);
+        return postJson("/api/auth/login", Map.of("username", username, "password", password), null);
     }
 
     protected String loginToken(String username, String password) throws Exception {

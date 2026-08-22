@@ -134,7 +134,7 @@ def main():
     def t11_update_user():
         request("PUT", f"/api/users/{uid}",
                 {"username": new_username, "oldPassword": password}, token=token, expect_code=0)
-        data, _ = request("GET", f"/api/users/{uid}", expect_code=0)
+        data, _ = request("GET", f"/api/users/{uid}", token=token, expect_code=0)
         assert data["username"] == new_username, "用户名未更新"
 
     def t12_unauthorized_create_post():
@@ -149,7 +149,7 @@ def main():
 
     def t14_delete_user():
         request("DELETE", f"/api/users/{uid}", token=token, expect_code=0)
-        request("GET", f"/api/users/{uid}", expect_code=40401)
+        request("GET", f"/api/users/{uid}", token=token, expect_code=40401)
 
     # 依赖顺序执行:注册 → 登录 → 发帖 → 评论 ...
     case("T01 健康检查", t01_health)
@@ -167,9 +167,7 @@ def main():
     case("T05 登录成功", t05_login_inner)
     case("T06 密码错误 → 40101", t06_login_wrong_password)
 
-    post_id = None
     case("T07 发帖(需登录)", t07_create_post)
-    comment_id = None
     case("T08 发表评论", t08_add_comment)
     case("T09 详情包含评论", t09_detail_contains_comment)
     case("T10 删除评论", t10_delete_comment)

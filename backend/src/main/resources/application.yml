@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: forum-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/forum_user?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    username: root
+    password: forum123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/forum_content
+
+forum:
+  jwt:
+    # 开发/测试密钥(>=32 字节);生产环境务必通过环境变量覆盖
+    secret: "forum-system-dev-secret-key-0123456789abcdef0123456789"
+    expire-hours: 24
+
+logging:
+  level:
+    com.forum: info

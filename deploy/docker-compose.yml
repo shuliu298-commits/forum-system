@@ -1,0 +1,43 @@
+# 开发环境:仅数据库(WSL Linux)
+# 后端在本地 IDE / mvn 运行,连接宿主机端口 3307 / 27017
+# 注意:MySQL 使用 3307 端口避开与本机其它 3306 服务冲突;如需改端口,
+#      请同步修改 backend/src/main/resources/application.yml
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: forum-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: forum123
+      MYSQL_DATABASE: forum_user
+    ports:
+      - "3307:3306"
+    volumes:
+      - forum-mysql-data:/var/lib/mysql
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pforum123"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongodb:
+    image: mongo:7
+    container_name: forum-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - forum-mongo-data:/data/db
+      - ./init/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - ./init/load.js:/docker-entrypoint-initdb.d/load.js:ro
+      - ./init/mock-data.json:/docker-entrypoint-initdb.d/mock-data.json:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ping:1}).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  forum-mysql-data:
+  forum-mongo-data:

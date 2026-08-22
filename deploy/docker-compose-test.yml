@@ -1,0 +1,60 @@
+# 测试环境:数据库 + 后端服务(供 docker-test / CI 使用)
+# 用法:docker compose -f deploy/docker-compose-test.yml -p forum-test up -d --build
+# 后端对外端口 8081,宿主机可直连:curl http://localhost:8081/api/health
+services:
+  mysql-test:
+    image: mysql:8.4
+    container_name: forum-test-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: forum123
+      MYSQL_DATABASE: forum_user
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pforum123"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongodb-test:
+    image: mongo:7
+    container_name: forum-test-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./init/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - ./init/load.js:/docker-entrypoint-initdb.d/load.js:ro
+      - ./init/mock-data.json:/docker-entrypoint-initdb.d/mock-data.json:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ping:1}).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend-test:
+    build:
+      context: ../backend
+      dockerfile: ../deploy/Dockerfile
+    container_name: forum-test-backend
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-test:3306/forum_user?useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: forum123
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb-test:27017/forum_content
+      FORUM_JWT_SECRET: forum-system-docker-test-secret-key-0123456789abcdef
+      FORUM_JWT_EXPIRE_HOURS: "24"
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+      mongodb-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s

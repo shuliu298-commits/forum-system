@@ -1,0 +1,120 @@
+[
+  {
+    "_id": "post-001",
+    "authorId": 1,
+    "authorName": "Tom",
+    "title": "今天学习Spring Boot",
+    "content": "今天学习Spring Boot,整理一下自动配置的原理,收获很大。",
+    "createTime": { "$date": "2026-01-01T10:00:00Z" },
+    "updateTime": { "$date": "2026-01-01T10:00:00Z" },
+    "comments": [
+      {
+        "commentId": "comment-0011",
+        "userId": 2,
+        "userName": "Alice",
+        "content": "很好,加油",
+        "createTime": { "$date": "2026-01-01T10:05:00Z" }
+      },
+      {
+        "commentId": "comment-0012",
+        "userId": 3,
+        "userName": "Bob",
+        "content": "一起学习",
+        "createTime": { "$date": "2026-01-01T10:10:00Z" }
+      }
+    ]
+  },
+  {
+    "_id": "post-002",
+    "authorId": 2,
+    "authorName": "Alice",
+    "title": "Flutter UI 笔记",
+    "content": "记录一下 Flutter 布局组件的使用心得:Row/Column/Expanded 的配合。",
+    "createTime": { "$date": "2026-01-02T09:30:00Z" },
+    "updateTime": { "$date": "2026-01-02T09:30:00Z" },
+    "comments": [
+      {
+        "commentId": "comment-0021",
+        "userId": 1,
+        "userName": "Tom",
+        "content": "收藏了,正好在学 Flutter",
+        "createTime": { "$date": "2026-01-02T11:00:00Z" }
+      }
+    ]
+  },
+  {
+    "_id": "post-003",
+    "authorId": 3,
+    "authorName": "Bob",
+    "title": "MongoDB 嵌套文档设计",
+    "content": "帖子与评论用嵌套结构存储,查询一条文档即可拿到全部评论,简单高效。",
+    "createTime": { "$date": "2026-01-03T14:20:00Z" },
+    "updateTime": { "$date": "2026-01-03T14:20:00Z" },
+    "comments": [
+      {
+        "commentId": "comment-0031",
+        "userId": 1,
+        "userName": "Tom",
+        "content": "和我们的论坛设计一致",
+        "createTime": { "$date": "2026-01-03T15:00:00Z" }
+      },
+      {
+        "commentId": "comment-0032",
+        "userId": 2,
+        "userName": "Alice",
+        "content": "不过评论多了会不会撑爆文档?",
+        "createTime": { "$date": "2026-01-03T15:30:00Z" }
+      }
+    ]
+  },
+  {
+    "_id": "post-004",
+    "authorId": 1,
+    "authorName": "Tom",
+    "title": "Docker Compose 环境搭建",
+    "content": "在 WSL 里用 Docker Compose 一键拉起 MySQL 和 MongoDB,后端本地调试很方便。",
+    "createTime": { "$date": "2026-01-04T08:00:00Z" },
+    "updateTime": { "$date": "2026-01-04T08:00:00Z" },
+    "comments": [
+      {
+        "commentId": "comment-0041",
+        "userId": 3,
+        "userName": "Bob",
+        "content": "健康检查写好,启动顺序就稳了",
+        "createTime": { "$date": "2026-01-04T09:00:00Z" }
+      }
+    ]
+  },
+  {
+    "_id": "post-005",
+    "authorId": 2,
+    "authorName": "Alice",
+    "title": "JWT 认证实践",
+    "content": "无状态 JWT 认证与 Spring Security 过滤器链的整合实践记录。",
+    "createTime": { "$date": "2026-01-05T16:00:00Z" },
+    "updateTime": { "$date": "2026-01-05T16:00:00Z" },
+    "comments": [
+      {
+        "commentId": "comment-0051",
+        "userId": 1,
+        "userName": "Tom",
+        "content": "注销用户后旧 token 怎么处理?",
+        "createTime": { "$date": "2026-01-05T17:00:00Z" }
+      },
+      {
+        "commentId": "comment-0052",
+        "userId": 2,
+        "userName": "Alice",
+        "content": "先按用户不存在拒绝,后续可加黑名单",
+        "createTime": { "$date": "2026-01-05T17:30:00Z" }
+      },
+      {
+        "commentId": "comment-0053",
+        "userId": 3,
+        "userName": "Bob",
+        "content": "支持,先把 Demo 跑通",
+        "createTime": { "$date": "2026-01-05T18:00:00Z" }
+      }
+    ]
+  }
+]

@@ -55,8 +55,13 @@ class _UserListPageState extends State<UserListPage> {
       passwordController: TextEditingController(),
     );
     if (result == null) return;
+    final password = result.$2 ?? '';
+    if (password.isEmpty) {
+      _showMessage('密码不能为空');
+      return;
+    }
     try {
-      await context.read<UserService>().register(result.$1, result.$2);
+      await context.read<UserService>().register(result.$1, password);
       _showMessage('创建成功');
       await _load();
     } on ApiException catch (e) {

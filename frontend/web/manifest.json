@@ -1,0 +1,11 @@
+{
+    "name": "forum_frontend",
+    "short_name": "forum_frontend",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "全栈论坛系统 Flutter 前端",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false
+}

@@ -1,0 +1,32 @@
+# 数据库可视化工具(Web 版,可选启动)
+# 依赖于 deploy/docker-compose.yml 已启动(MySQL 3307 / MongoDB 27017)
+# 用法:
+#   docker compose -f deploy/docker-compose-admin.yml up -d
+#   - MySQL  web 端:   http://localhost:8082   (系统选 MySQL,服务器 host.docker.internal:3307,用户 root 密码 forum123)
+#   - MongoDB web 端:  http://localhost:8083   (默认连 forum_content 库)
+services:
+  adminer:
+    image: adminer:latest
+    container_name: forum-adminer
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: host.docker.internal
+      ADMINER_DEFAULT_DB: forum_user
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: forum-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8083:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: host.docker.internal
+      ME_CONFIG_MONGODB_PORT: "27017"
+      ME_CONFIG_BASICAUTH_USERNAME: forum
+      ME_CONFIG_BASICAUTH_PASSWORD: forum123
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

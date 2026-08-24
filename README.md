@@ -123,6 +123,46 @@ fix(post): 修复分页越界问题
 docs: 更新设计文档
 ```
 
+## 服务器部署与前端 API 地址配置
+
+后端部署到远程服务器后,前端(浏览器)不再能访问 `localhost`,按需选择一种方式:
+
+**方式一:运行时注入(推荐,无需改代码)**
+
+```bash
+# 开发调试
+flutter run -d Edge --dart-define=API_BASE_URL=http://<服务器IP>:8080/api
+
+# 构建部署(nginx 托管静态产物)
+flutter build web --dart-define=API_BASE_URL=https://forum.example.com/api
+```
+
+**方式二:直接修改** `frontend/lib/core/api/api_config.dart` 的 `baseUrl`。
+
+后端侧确保:
+
+- Spring Boot 监听 `0.0.0.0`(默认);部署用 `docker-compose-test.yml` 时,容器内 8080 已映射宿主机 8081;
+- 云服务器安全组/防火墙放行对应端口(如 `ufw allow 8080/tcp`);
+- 跨域:初版 CORS 允许所有来源(`SecurityConfig`),生产建议收紧为具体域名。
+
+## 数据库可视化工具
+
+**方案一:Web 版(docker 一键,适合服务器/WSL)**
+
+```bash
+docker compose -f deploy/docker-compose.yml up -d                # 先启动数据库
+docker compose -f deploy/docker-compose-admin.yml up -d          # 启动可视化工具
+# MySQL   web 端: http://localhost:8082  (系统 MySQL,host: host.docker.internal:3307,root/forum123)
+# MongoDB web 端: http://localhost:8083  (用户名 forum / 密码 forum123)
+```
+
+**方案二:桌面客户端(Windows)**
+
+- [DBeaver Community](https://dbeaver.io/download/)(免费):一个客户端同时连 MySQL 与 MongoDB
+  - MySQL:localhost:3307,user root / password forum123,数据库 forum_user
+  - MongoDB:localhost:27017,直连,数据库 forum_content
+- 或 MongoDB 官方 [Compass](https://www.mongodb.com/products/compass) + MySQL 自带 [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)
+
 ## 已知说明
 
 - 帖子中冗余 `authorName` 快照(避免跨库 join),用户改名不影响历史帖子显示。

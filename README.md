@@ -54,21 +54,3 @@ flutter run -d Edge --dart-define=API_BASE_URL=http://<服务器IP>:8080/api   #
 flutter build web --dart-define=API_BASE_URL=https://forum.example.com/api  # 构建发布版
 ```
 
-## 配置(环境变量注入)
-
-后端配置全部支持环境变量覆盖(`backend/src/main/resources/application.yml`):
-
-| 环境变量 | 默认值(本地开发) | 说明 |
-|---|---|---|
-| `DB_URL` | `jdbc:mysql://localhost:3307/forum_user...` | MySQL 连接串 |
-| `DB_USERNAME` / `DB_PASSWORD` | `root` / `forum123` | MySQL 账号 |
-| `MONGODB_URI` | `mongodb://localhost:27017/forum_content` | MongoDB 连接串 |
-| `FORUM_JWT_SECRET` | 开发密钥 | JWT 签名密钥(生产必须覆盖,≥32 字节) |
-| `FORUM_JWT_EXPIRE_HOURS` | `24` | Token 有效期(小时) |
-| `SERVER_PORT` | `8080` | 服务端口 |
-
-## 更多
-
-- API 设计、数据模型与里程碑见 [docs/初版设计.md](docs/初版设计.md)
-- CI 流水线见 [.github/workflows/ci.yml](.github/workflows/ci.yml)(git push/PR 触发)
-- 分支模型:main(稳定)/ develop(集成)/ feature/*;提交遵循 Conventional Commits

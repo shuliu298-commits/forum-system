@@ -1,7 +1,7 @@
 # Sonar 规则映射(Checkstyle / SpotBugs 覆盖)
 
 本项目不单独部署 Sonar 服务(初版)。以下 Sonar 核心规则由
-`docs/checkstyle.xml` + SpotBugs 配置映射覆盖,供人工 Review 参考:
+`backend/config/checkstyle.xml` + SpotBugs 配置映射覆盖,供人工 Review 参考:
 
 | Sonar 规则 | 覆盖工具 | 说明 |
 |---|---|---|

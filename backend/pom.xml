@@ -116,7 +116,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
-                    <configLocation>${project.basedir}/../docs/checkstyle.xml</configLocation>
+                    <configLocation>${project.basedir}/config/checkstyle.xml</configLocation>
                     <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
@@ -131,7 +131,7 @@
                     <effort>Max</effort>
                     <threshold>Medium</threshold>
                     <failOnError>true</failOnError>
-                    <excludeFilterFile>${project.basedir}/../docs/spotbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>${project.basedir}/config/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
             </plugin>
         </plugins>

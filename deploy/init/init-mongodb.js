@@ -1,7 +1,7 @@
 // MongoDB 初始化脚本(容器首次启动时由官方 entrypoint 自动执行,mongosh 运行)
-// 数据源:同目录 mock-data.json(与 mongoimport 格式一致)
+// 数据源:同目录 mock-data-mongodb.json(与 mongoimport 格式一致)
 const fs = require('fs');
-const path = '/docker-entrypoint-initdb.d/mock-data.json';
+const path = '/docker-entrypoint-initdb.d/mock-data-mongodb.json';
 const raw = fs.readFileSync(path, 'utf8');
 const docs = JSON.parse(raw);
 
@@ -18,4 +18,4 @@ const normalize = (doc) => {
 
 const result = db.getSiblingDB('forum_content').post.insertMany(docs.map(normalize), { ordered: false });
 const count = result.insertedIds ? Object.keys(result.insertedIds).length : docs.length;
-print(`[load.js] inserted ${count} posts`);
+print(`[init-mongodb.js] inserted ${count} posts`);

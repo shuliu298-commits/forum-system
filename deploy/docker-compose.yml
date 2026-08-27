@@ -14,7 +14,7 @@ services:
       - "3307:3306"
     volumes:
       - forum-mysql-data:/var/lib/mysql
-      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init/init-mysql.sql:/docker-entrypoint-initdb.d/init-mysql.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pforum123"]
       interval: 5s
@@ -29,8 +29,8 @@ services:
       - "27017:27017"
     volumes:
       - forum-mongo-data:/data/db
-      - ./init/load.js:/docker-entrypoint-initdb.d/load.js:ro
-      - ./init/mock-data.json:/docker-entrypoint-initdb.d/mock-data.json:ro
+      - ./init/init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
+      - ./init/mock-data-mongodb.json:/docker-entrypoint-initdb.d/mock-data-mongodb.json:ro
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ping:1}).ok"]
       interval: 5s

@@ -1,10 +1,10 @@
 # CI 流水线:git push / PR 触发
-# Stage 1: 后端 Lint(Checkstyle + SpotBugs + 行数检查)
-# Stage 2: 后端测试(mvn verify,含集成测试,连 CI 服务容器)
-# Stage 3: Docker 端到端(docker-compose-test 起全链路 + 接口测试)
+# Stage1: scripts/check.sh lint(Checkstyle + SpotBugs + 行数)
+# Stage2: scripts/docker.sh dev up + mvn verify(集成测试)
+# Stage3: scripts/check.sh e2e(Docker 全链路 + API 断言)
 #
 # 说明:Flutter Windows 构建依赖本地 SDK,不在 CI 编译;
-#      本地执行 scripts/lint + flutter analyze(见 README)。
+#      本地执行 flutter analyze + flutter test(见 README)。
 name: CI
 
 on:
@@ -26,14 +26,8 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Checkstyle + SpotBugs
-        run: |
-          cd backend
-          mvn -B -q checkstyle:check
-          mvn -B -q com.github.spotbugs:spotbugs-maven-plugin:check
-
-      - name: Java 文件行数检查 (<= 800)
-        run: bash scripts/check/check-line-count.sh
+      - name: Lint(Checkstyle + SpotBugs + 行数)
+        run: bash scripts/check.sh lint
 
   test:
     name: Stage2 Backend Test
@@ -47,17 +41,15 @@ jobs:
           java-version: '21'
           cache: maven
 
-      # 用 dev compose 起 MySQL + MongoDB(含初始化脚本),比 GitHub services
-      # 容器对 mongo:7 更稳定;与集成测试端口(3307/27017)一致
       - name: 启动数据库容器
-        run: docker compose -f deploy/docker-compose.yml -p forum-ci up -d --wait
+        run: bash scripts/docker.sh dev up
 
       - name: mvn verify(集成测试)
         run: cd backend && mvn -B verify
 
       - name: 清理数据库容器
         if: always()
-        run: docker compose -f deploy/docker-compose.yml -p forum-ci down -v --remove-orphans
+        run: bash scripts/docker.sh dev down
 
   docker-e2e:
     name: Stage3 Docker E2E
@@ -66,12 +58,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 启动测试环境
-        run: bash scripts/docker-test/start-env.sh
-
-      - name: 端到端 API 测试
-        run: bash scripts/docker-test/run-api-tests.sh
-
-      - name: 清理测试环境
-        if: always()
-        run: bash scripts/docker-test/stop-env.sh
+      - name: 全链路端到端测试(check.sh e2e)
+        run: bash scripts/check.sh e2e

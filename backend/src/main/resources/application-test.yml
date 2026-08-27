@@ -1,21 +1,22 @@
+# 集成测试配置:默认连接本机 dev 环境(3307/27017),测试库 forum_user_test 自动建表
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3307/forum_user_test?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true
-    username: root
-    password: forum123
+    url: ${DB_URL:jdbc:mysql://localhost:3307/forum_user_test?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:forum123}
   jpa:
+    # 测试库(forum_user_test)首次运行自动建表;生产/开发用 init.sql
     hibernate:
-      # 测试库(forum_user_test)首次运行自动建表;生产/开发用 init.sql
       ddl-auto: update
     open-in-view: false
   data:
     mongodb:
-      uri: mongodb://localhost:27017/forum_content
+      uri: ${MONGODB_URI:mongodb://localhost:27017/forum_content}
 
 forum:
   jwt:
-    secret: "forum-system-test-secret-key-0123456789abcdef0123456789"
-    expire-hours: 24
+    secret: ${FORUM_JWT_SECRET:forum-system-test-secret-key-0123456789abcdef0123456789}
+    expire-hours: ${FORUM_JWT_EXPIRE_HOURS:24}
 
 logging:
   level:

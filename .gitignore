@@ -18,5 +18,5 @@ frontend/.flutter-plugins
 frontend/.flutter-plugins-dependencies
 
 # --- Test / logs ---
-scripts/docker-test/report/
+scripts/report/
 *.log

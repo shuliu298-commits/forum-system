@@ -43,7 +43,11 @@ case "$ACTION" in
     compose up -d "${COMPOSE_OPTS[@]}"
     if [ "$ENV_NAME" != "admin" ]; then
       echo "==> 等待服务健康 ..."
-      compose up -d --wait
+      # --wait 偶发因健康检查窗口超时返回非 0,重试一次以提升稳定性
+      if ! compose up -d --wait; then
+        echo "!! 首次健康等待超时,重试一次 ..."
+        compose up -d --wait
+      fi
     fi
     ;;
   down)
